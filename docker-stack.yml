@@ -14,6 +14,8 @@ services:
         delay: 10s
       restart_policy:
         condition: on-failure
+      placement:
+        constraints: [node.role == worker]
   db:
     image: postgres:9.4
     volumes:
@@ -22,7 +24,7 @@ services:
       - backend
     deploy:
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role == worker]
   vote:
     image: dockersamples/examplevotingapp_vote:before
     ports:
@@ -37,6 +39,8 @@ services:
         parallelism: 2
       restart_policy:
         condition: on-failure
+      placement:
+        constraints: [node.role == worker]
   result:
     image: dockersamples/examplevotingapp_result:before
     ports:
@@ -52,6 +56,8 @@ services:
         delay: 10s
       restart_policy:
         condition: on-failure
+      placement:
+        constraints: [node.role == worker]
 
   worker:
     image: dockersamples/examplevotingapp_worker
@@ -68,7 +74,7 @@ services:
         max_attempts: 3
         window: 120s
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role == worker]
 
   visualizer:
     image: dockersamples/visualizer:stable
@@ -79,7 +85,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     deploy:
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role == worker]
 
 networks:
   frontend:
