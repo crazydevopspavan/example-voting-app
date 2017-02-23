@@ -6,7 +6,7 @@ services:
     ports:
       - "6379"
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         parallelism: 2
         delay: 10s
@@ -14,6 +14,10 @@ services:
         condition: on-failure
       placement:
         constraints: [node.role == worker]
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 256M
   db:
     image: postgres:9.4
     volumes:
@@ -21,6 +25,10 @@ services:
     deploy:
       placement:
         constraints: [node.role == worker]
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 256M
   vote:
     image: dockersamples/examplevotingapp_vote:before
     ports:
@@ -35,6 +43,10 @@ services:
         condition: on-failure
       placement:
         constraints: [node.role == worker]
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
   result:
     image: dockersamples/examplevotingapp_result:before
     ports:
@@ -50,6 +62,10 @@ services:
         condition: on-failure
       placement:
         constraints: [node.role == worker]
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
 
   worker:
     image: dockersamples/examplevotingapp_worker
@@ -64,6 +80,10 @@ services:
         window: 120s
       placement:
         constraints: [node.role == worker]
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
 
 volumes:
   db-data:
